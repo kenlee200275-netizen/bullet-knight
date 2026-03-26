@@ -8,10 +8,14 @@ source.include_exts = py,png,jpg
 
 version = 1.0
 
-requirements = python3,pygame
+requirements = python3,kivy
 
 orientation = landscape
 fullscreen = 1
+
+android.permissions = INTERNET
+android.minapi = 21
+android.sdk = 33
 
 [buildozer]
 log_level = 2
