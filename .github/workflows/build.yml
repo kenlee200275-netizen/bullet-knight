@@ -14,8 +14,12 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install -y python3-pip
+          sudo apt install -y python3-pip openjdk-17-jdk
           pip install buildozer cython
+
+      - name: Accept Android licenses
+        run: |
+          yes | sdkmanager --licenses || true
 
       - name: Build APK
         run: |
