@@ -1,25 +1,27 @@
-name: Build APK
+[app]
+title = Bullet Knight
+package.name = bulletknight
+package.domain = org.test
 
-on:
-  push:
-    branches: [ "main" ]
+source.dir = .
+source.include_exts = py,png,jpg
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+version = 1.0
 
-    steps:
-    - uses: actions/checkout@v3
+requirements = kivy
 
-    - name: Install system deps
-      run: |
-        sudo apt update
-        sudo apt install -y python3-pip git zip unzip openjdk-17-jdk wget
+orientation = landscape
+fullscreen = 1
 
-    - name: Install buildozer
-      run: |
-        pip install buildozer cython
+android.permissions = INTERNET
+android.minapi = 21
+android.sdk = 33
 
-    - name: Install Android SDK
-      run: |
-        mkdir -p
+android.sdk_path = /home/runner/android-sdk
+android.accept_sdk_license = True
+android.skip_update = True
+
+[buildozer]
+log_level = 2
+android.api = 33
+android.build_tools = 33.0.0
