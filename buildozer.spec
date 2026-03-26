@@ -17,6 +17,7 @@ android.permissions = INTERNET
 android.minapi = 21
 android.sdk = 33
 
+android.sdk_path = /home/runner/android-sdk
 android.accept_sdk_license = True
 android.skip_update = True
 
