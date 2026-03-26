@@ -8,7 +8,7 @@ source.include_exts = py,png,jpg
 
 version = 1.0
 
-requirements = python3,kivy
+requirements = kivy
 
 orientation = landscape
 fullscreen = 1
@@ -16,6 +16,9 @@ fullscreen = 1
 android.permissions = INTERNET
 android.minapi = 21
 android.sdk = 33
+
+android.accept_sdk_license = True
+android.skip_update = True
 
 [buildozer]
 log_level = 2
