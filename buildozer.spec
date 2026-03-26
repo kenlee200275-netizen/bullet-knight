@@ -1,27 +1,32 @@
-[app]
-title = Bullet Knight
-package.name = bulletknight
-package.domain = org.test
+name: Build APK
 
-source.dir = .
-source.include_exts = py,png,jpg
+on:
+  push:
+    branches: [ "main" ]
 
-version = 1.0
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-requirements = python3,kivy
+    steps:
+    - uses: actions/checkout@v3
 
-orientation = landscape
-fullscreen = 1
+    - name: Install deps
+      run: |
+        sudo apt update
+        sudo apt install -y python3-pip git zip unzip openjdk-17-jdk
+        pip install buildozer cython
 
-android.permissions = INTERNET
+    - name: Build APK
+      run: |
+        buildozer init || true
 
-# 🔥 стабильные версии
-android.api = 30
-android.minapi = 21
-android.ndk = 25b
+        sed -i 's/title = .*/title = BulletKnight/' buildozer.spec
+        sed -i 's/package.name = .*/package.name = bulletknight/' buildozer.spec
+        sed -i 's/android.api = .*/android.api = 33/' buildozer.spec
+        sed -i 's/android.minapi = .*/android.minapi = 21/' buildozer.spec
+        sed -i 's/android.sdk = .*/android.sdk = 24/' buildozer.spec
+        sed -i 's/android.ndk = .*/android.ndk = 23b/' buildozer.spec
 
-# не трогаем SDK руками
-android.skip_update = False
-
-[buildozer]
-log_level = 2
+        buildozer android clean
+        buildozer
