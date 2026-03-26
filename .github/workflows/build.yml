@@ -1,46 +1,42 @@
 name: Build APK
 
 on:
-  push:
+push:
+branches: [ "main" ]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+build:
+runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+steps:
+- uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: |
-          sudo apt update
-          sudo apt install -y python3-pip openjdk-17-jdk unzip
-          pip install buildozer cython
+- name: Install
+  run: |
+    sudo apt update
+    sudo apt install -y python3-pip python3-setuptools git zip unzip openjdk-17-jdk
 
-      - name: Install Android SDK
-        run: |
-          mkdir -p $HOME/android-sdk/cmdline-tools
-          cd $HOME/android-sdk/cmdline-tools
-          wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
-          unzip commandlinetools-linux-*.zip
-          mv cmdline-tools latest
+- name: Python deps
+  run: |
+    pip install buildozer cython
 
-      - name: Set environment
-        run: |
-          echo "ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
-          echo "PATH=$HOME/android-sdk/cmdline-tools/latest/bin:$PATH" >> $GITHUB_ENV
+- name: Init
+  run: buildozer init
 
-      - name: Accept licenses & install SDK
-        run: |
-          yes | sdkmanager --licenses
-          sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.0"
+- name: Config
+  run: |
+    sed -i 's/title = .*/title = Bullet Knight/' buildozer.spec
+    sed -i 's/package.name = .*/package.name = bulletknight/' buildozer.spec
+    sed -i 's/requirements = .*/requirements = python3,kivy/' buildоzer.spec
+    sed -i 's/source.include_exts = .*/source.include_exts = py,png,jpg,kv,atlas,wav,mp3,json/' buildozer.spec
+    sed -i 's/orientation = .*/orientation = landscape/' buildozer.spec
+    echo "android.permissions = INTERNET" >> buildozer.spec
 
-      - name: Build APK
-        run: |
-          buildozer android debug
+- name: Build
+  run: buildozer -v android debug
 
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: apk
-          path: bin/*.apk
+- name: Upload
+  uses: actions/upload-artifact@v3
+  with:
+    name: apk
+    path: bin/*.apk
